@@ -1,27 +1,43 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+  <Suspense>
+    <template #default>
+      <HomePage />
+    </template>
+    <template #fallback>
+      <SplashScreen />
+    </template>
+  </Suspense>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import HelloWorld from "./components/HelloWorld.vue";
+import SplashScreen from "@/components/SplashScreen.vue";
+import { defineAsyncComponent } from "vue";
 
-@Options({
+export default {
   components: {
-    HelloWorld,
+    SplashScreen,
+    HomePage: defineAsyncComponent(
+      () =>
+        new Promise((resolve) =>
+          setTimeout(() => {
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            resolve(require("@/components/HomePage.vue"));
+          }, 2500)
+        )
+    ),
   },
-})
-export default class App extends Vue {}
+};
 </script>
-
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+html,
+body,
+.app {
+  min-height: 100vh;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+* {
+  --brand-green: #04b500;
+  --brand-blue: #0689b0;
 }
 </style>
